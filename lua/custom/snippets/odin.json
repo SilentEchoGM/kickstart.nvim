@@ -1,0 +1,6 @@
+{
+	"test_function": {
+		"prefix": "tfn",
+		"body": "@(test)\ntest_${0} :: proc(t: ^testing.T) {\n\t\n}"
+	}
+}

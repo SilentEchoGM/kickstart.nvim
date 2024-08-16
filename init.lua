@@ -70,7 +70,7 @@ Kickstart Guide:
     These are hints about where to find more information about the relevant settings,
     plugins or Neovim features used in Kickstart.
 
-   NOTE: Look for lines like this
+  NOTE: Look for lines like this
 
     Throughout the file. These are for you, the reader, to help you understand what is happening.
     Feel free to delete them once you know what you're doing, but they should serve as a guide
@@ -97,6 +97,14 @@ vim.g.have_nerd_font = true
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+
+-- Set Terminal
+vim.opt.shell = 'pwsh.exe'
+vim.opt.shellxquote = ''
+vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
+vim.opt.shellquote = ''
+vim.opt.shellpipe = '| Out-File -Encoding UTF8 %s'
+vim.opt.shellredir = '| Out-File -Encoding UTF8 %s'
 
 -- Make line numbers default
 vim.opt.number = true
@@ -157,6 +165,10 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Folding
+vim.g.foldmethod = 'expr'
+vim.g.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -166,6 +178,10 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
+vim.keymap.set('n', '<leader>gn', vim.diagnostic.goto_next, { desc = 'Goto next diagnostic issue' })
+vim.keymap.set('n', '<leader>gN', vim.diagnostic.goto_prev, { desc = 'Goto previous diagnostic issue' })
+vim.keymap.set('n', '<leader>gf', vim.diagnostic.open_float, { desc = 'Open issue in a float' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -190,6 +206,10 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Misc keymaps
+vim.keymap.set({ 'n', 'i' }, '<leader>lr', '<cmd>RestartLsp<CR>', { desc = 'Restart LSP' })
+vim.keymap.set({ 'n' }, 'gD', '<cmd>tjump<CR>')
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -201,6 +221,44 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
+  end,
+})
+
+-- Telescope fold workaround https://github.com/nvim-telescope/telescope.nvim/issues/699
+vim.api.nvim_create_autocmd('BufEnter', {
+  callback = function()
+    if vim.opt.foldmethod:get() == 'expr' then
+      vim.schedule(function()
+        vim.opt.foldmethod = 'expr'
+      end)
+    end
+  end,
+})
+-- Persist folds
+local view_group = vim.api.nvim_create_augroup('auto_view', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufWinLeave', 'BufWritePost', 'WinLeave' }, {
+  desc = 'Save view with mkview for real files',
+  group = view_group,
+  callback = function(args)
+    if vim.b[args.buf].view_activated then
+      vim.cmd.mkview { mods = { emsg_silent = true } }
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  desc = 'Try to load file view if available and enable view saving for real files',
+  group = view_group,
+  callback = function(args)
+    if not vim.b[args.buf].view_activated then
+      local filetype = vim.api.nvim_get_option_value('filetype', { buf = args.buf })
+      local buftype = vim.api.nvim_get_option_value('buftype', { buf = args.buf })
+      local ignore_filetypes = { 'gitcommit', 'gitrebase', 'svg', 'hgcommit' }
+      if buftype == '' and filetype and filetype ~= '' and not vim.tbl_contains(ignore_filetypes, filetype) then
+        vim.b[args.buf].view_activated = true
+        vim.cmd.loadview { mods = { emsg_silent = true } }
+      end
+    end
   end,
 })
 
@@ -591,15 +649,21 @@ require('lazy').setup({
               completion = {
                 callSnippet = 'Replace',
               },
+              workspace = {
+                library = {
+                  vim.env.VIMRUNTIME .. '/lua',
+                },
+              },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
-        ols = {},
+        svelte = {},
       }
 
-      -- Ensure the servers and tools above are installed
+      -- Ensure the servers and tools above are installed:w
+      --
       --  To check the current status of installed tools and/or manually install
       --  other tools, you can run
       --    :Mason
@@ -694,6 +758,18 @@ require('lazy').setup({
           --   end,
           -- },
         },
+        config = function()
+          require('luasnip.loaders.from_vscode').lazy_load {
+            paths = { './lua/custom/snippets' },
+          }
+
+          local ls = require 'luasnip'
+
+          ls.filetype_extend('svelte', {
+            'typescript',
+            'html',
+          })
+        end,
       },
       'saadparwaiz1/cmp_luasnip',
 
@@ -770,14 +846,15 @@ require('lazy').setup({
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
-          {
-            name = 'lazydev',
-            -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
-            group_index = 0,
-          },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+        },
+        formatting = {
+          format = function(entry, vim_item)
+            vim_item.menu = entry.source.name
+            return vim_item
+          end,
         },
       }
     end,
@@ -845,7 +922,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'svelte', 'typescript' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -884,7 +961,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -894,6 +971,7 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
+  { import = 'custom.snippets' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the

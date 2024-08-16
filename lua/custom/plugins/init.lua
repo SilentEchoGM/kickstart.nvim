@@ -2,4 +2,21 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  {
+    'julienvincent/hunk.nvim',
+    cmd = { 'DiffEditor' },
+    config = function()
+      require('hunk').setup()
+    end,
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+    },
+  },
+  {
+    'yaocccc/nvim-foldsign',
+    config = function()
+      require('nvim-foldsign').setup()
+    end,
+  },
+}
