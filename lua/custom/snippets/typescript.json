@@ -1,6 +1,14 @@
 {
 	"lambda": {
-		prefix:"aa",
-		"body": "(${0}) => {\n\t${1}\n}"
+		"prefix": "aa",
+		"body": "(${1})${2} => {\n\t${3}\n}"
+	},
+	"lambda_return": {
+		"prefix": "ar",
+		"body": "(${1})${2} => ${3}"
+	},
+	"effect_generator": {
+		"prefix": "eg",
+		"body": "Effect.gen(function* (){\n\t${0}\n})"
 	}
 }

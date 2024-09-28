@@ -208,7 +208,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Misc keymaps
-vim.keymap.set({ 'n', 'i' }, '<leader>lr', '<cmd>RestartLsp<CR>', { desc = 'Restart LSP' })
+vim.keymap.set({ 'n', 'i' }, '<leader>lr', '<cmd>LspRestart<CR>', { desc = 'Restart LSP' })
 vim.keymap.set({ 'n' }, 'gD', '<cmd>tjump<CR>')
 
 -- [[ Basic Autocommands ]]
@@ -262,6 +262,8 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     end
   end,
 })
+
+vim.keymap.set('n', '<leader>e', '<cmd>Ex<CR>', { desc = '[E]xplorer View' })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -344,7 +346,10 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>h', group = '[H]arpoon' },
+        { '<leader>m', group = '[M]arkdown', mode = { 'n' } },
+        { '<leader>p', group = '[P]roject', mode = { 'n' } },
+        { '<leader>l', group = '[L]sp' },
       }
     end,
   },
@@ -427,7 +432,7 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.git_files, { desc = '[S]earch Git [F]iles' })
+      vim.keymap.set('n', '<leader>sv', builtin.git_files, { desc = '[S]earch Git Files' })
       vim.keymap.set('n', '<leader>sa', builtin.find_files, { desc = '[S]earch All [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
@@ -484,7 +489,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-
+      'nvimdev/lspsaga.nvim',
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
@@ -747,9 +752,6 @@ require('lazy').setup({
           -- Build Step is needed for regex support in snippets.
           -- This step is not supported in many windows environments.
           -- Remove the below condition to re-enable on windows.
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
           return 'make install_jsregexp'
         end)(),
         dependencies = {
@@ -851,8 +853,8 @@ require('lazy').setup({
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
-          { name = 'nvim_lsp' },
           { name = 'luasnip' },
+          { name = 'nvim_lsp' },
           { name = 'path' },
         },
         formatting = {
@@ -904,7 +906,7 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
       vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
-
+      vim.keymap.set({ 'n', 'i' }, '<C-a>', 'sr')
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -999,6 +1001,8 @@ require('lazy').setup({
     },
   },
 })
+
+require 'custom'
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

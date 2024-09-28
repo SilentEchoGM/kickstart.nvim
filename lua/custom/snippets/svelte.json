@@ -8,7 +8,7 @@
 		"body": "<style lang=\"postcss\">\n\t${0}\n</style>"
 	},
 	"lambda": {
-		prefix:"aa",
+		"prefix":"aa",
 		"body": "(${0}) => {\n\t${1}\n}"
 	}
 }
