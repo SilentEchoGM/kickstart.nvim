@@ -50,6 +50,7 @@ end, { desc = 'Create SvelteKit [P]roject [R]oute file' })
 vim.keymap.set({ 'n' }, '<leader>pl', function()
   e_sveltekit_file 'lib'
 end, { desc = 'Create SvelteKit [P]roject [L]ib file' })
+vim.keymap.set({ 'n', 't' }, '<leader>t', '<cmd>term<CR>', { desc = '[T]erminal' })
 
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2

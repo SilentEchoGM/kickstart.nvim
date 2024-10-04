@@ -263,8 +263,6 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   end,
 })
 
-vim.keymap.set('n', '<leader>e', '<cmd>Ex<CR>', { desc = '[E]xplorer View' })
-
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -350,6 +348,7 @@ require('lazy').setup({
         { '<leader>m', group = '[M]arkdown', mode = { 'n' } },
         { '<leader>p', group = '[P]roject', mode = { 'n' } },
         { '<leader>l', group = '[L]sp' },
+        { '<leader>e', group = '[E]xplorer' },
       }
     end,
   },
@@ -420,6 +419,19 @@ require('lazy').setup({
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+            find_command = {
+              'rg',
+              '--files',
+              '--glob',
+              '!{.git/*,.svelte-kit/*,target/*,node_modules/*}',
+              '--path-separator',
+              '/',
+            },
           },
         },
       }
@@ -907,6 +919,7 @@ require('lazy').setup({
       require('mini.surround').setup()
       vim.keymap.set({ 'n', 'x' }, 's', '<Nop>')
       vim.keymap.set({ 'n', 'i' }, '<C-a>', 'sr')
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
@@ -921,6 +934,12 @@ require('lazy').setup({
       statusline.section_location = function()
         return '%2l:%-2v'
       end
+      -- Remove buffers easily
+      require('mini.bufremove').setup()
+      vim.keymap.set({ 'n', 'i' }, '<C-w>z', function()
+        require('mini.bufremove').delete()
+      end)
+      vim.keymap.set({ 'c' }, 'bd', 'lua MiniBufremove.delete()')
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim

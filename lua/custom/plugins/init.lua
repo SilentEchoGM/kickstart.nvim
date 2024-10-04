@@ -126,6 +126,7 @@ return {
       vim.keymap.set('n', '<leader>ld', '<cmd>Lspsaga hover_doc<CR>', { desc = '[D]isplay docs' })
       vim.keymap.set({ 'n', 'i' }, '<C-g>', '<cmd>Lspsaga hover_doc<CR>')
       vim.keymap.set('n', '<leader>lp', '<cmd>Lspsaga hover_doc ++keep<CR>', { desc = '[P]in docs' })
+      vim.keymap.set({ 'n', 'i' }, '<C-m>', '<cmd>Lspsaga hover_doc ++keep<CR>')
     end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
@@ -153,5 +154,31 @@ return {
   },
   {
     'rktjmp/lush.nvim',
+  },
+  {
+    'willothy/flatten.nvim',
+    config = true,
+    lazy = false,
+    priority = 1001,
+  },
+  {
+    'stevearc/oil.nvim',
+    --@module 'oil'
+    --@type oill.SetupOpts
+    opts = {},
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      vim.keymap.set({ 'n', 'i' }, '<leader>e', '<cmd>Oil<CR>', {
+        desc = 'Open Oil',
+      })
+
+      require('oil').setup {
+        default_file_explorer = true,
+        columns = { 'icon', 'mtime' },
+        delete_to_trash = true,
+      }
+    end,
   },
 }

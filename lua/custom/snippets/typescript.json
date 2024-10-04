@@ -7,8 +7,20 @@
 		"prefix": "ar",
 		"body": "(${1})${2} => ${3}"
 	},
+	"lambda_async": {
+		"prefix": "as",
+		"body": "async (${1})${2} => {\n\t${3}\n}"
+	},
+	"lambda_async_return": {
+		"prefix": "asr",
+		"body": "async (${1})${2} => ${3}"
+	},
 	"effect_generator": {
 		"prefix": "eg",
 		"body": "Effect.gen(function* (){\n\t${0}\n})"
+	},
+	"schema_type": {
+		"prefix": "st",
+		"body": "Schema.Schema.Type<typeof ${0}>"
 	}
 }
