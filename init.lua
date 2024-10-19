@@ -179,9 +179,9 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
-vim.keymap.set('n', '<leader>gn', vim.diagnostic.goto_next, { desc = 'Goto next diagnostic issue' })
-vim.keymap.set('n', '<leader>gN', vim.diagnostic.goto_prev, { desc = 'Goto previous diagnostic issue' })
-vim.keymap.set('n', '<leader>gf', vim.diagnostic.open_float, { desc = 'Open issue in a float' })
+vim.keymap.set('n', '<leader>g;', vim.diagnostic.goto_next, { desc = 'Goto Next Diagnostic Issue' })
+vim.keymap.set('n', '<leader>g,', vim.diagnostic.goto_prev, { desc = 'Goto Previous Diagnostic Issue' })
+vim.keymap.set('n', '<leader>lf', vim.diagnostic.open_float, { desc = 'Open Issue in a [F]loat' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -344,11 +344,12 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = '[H]arpoon' },
         { '<leader>m', group = '[M]arkdown', mode = { 'n' } },
         { '<leader>p', group = '[P]roject', mode = { 'n' } },
         { '<leader>l', group = '[L]sp' },
         { '<leader>e', group = '[E]xplorer' },
+        { '<leader>u', group = '[U]ndotree' },
+        { '<leader>g', group = '[G]oto' },
       }
     end,
   },
@@ -424,14 +425,6 @@ require('lazy').setup({
         pickers = {
           find_files = {
             hidden = true,
-            find_command = {
-              'rg',
-              '--files',
-              '--glob',
-              '!{.git/*,.svelte-kit/*,target/*,node_modules/*}',
-              '--path-separator',
-              '/',
-            },
           },
         },
       }
@@ -446,13 +439,17 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sv', builtin.git_files, { desc = '[S]earch Git Files' })
       vim.keymap.set('n', '<leader>sa', builtin.find_files, { desc = '[S]earch All [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>st', builtin.builtin, { desc = '[S]earch Select [T]elescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader><lt>', builtin.buffers, { desc = '[S]earch Existing [B]uffers' })
+
+      vim.keymap.set('n', '<leader>ss', function()
+        builtin.find_files { cwd = vim.fn.expand '%:p:h', follow = false }
+      end, { desc = '[S]earch [S]ibling Files' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()

@@ -51,6 +51,7 @@ vim.keymap.set({ 'n' }, '<leader>pl', function()
   e_sveltekit_file 'lib'
 end, { desc = 'Create SvelteKit [P]roject [L]ib file' })
 vim.keymap.set({ 'n', 't' }, '<leader>t', '<cmd>term<CR>', { desc = '[T]erminal' })
+vim.keymap.set({ 'i', 't' }, '<C-w>', '<Esc><C-w>')
 
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2

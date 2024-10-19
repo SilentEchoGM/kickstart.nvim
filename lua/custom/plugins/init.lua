@@ -30,11 +30,20 @@ return {
     ft = { 'markdown' },
   },
   {
+    'jiaoshijie/undotree',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = true,
+    keys = { -- load the plugin only when using it's keybinding:
+      { '<leader>u', "<cmd>lua require('undotree').toggle()<cr>" },
+    },
+  },
+  {
     'zschreur/telescope-jj.nvim',
     config = function()
       local builtin = require 'telescope.builtin'
       local telescope = require 'telescope'
       telescope.load_extension 'jj'
+
       local vcs_picker = function(opts)
         local jj_pick_status, _jj_res = pcall(telescope.extensions.jj.files, opts)
         if jj_pick_status then
@@ -79,17 +88,29 @@ return {
 
       harpoon:setup()
 
-      vim.keymap.set('n', '<leader>ha', function()
+      vim.keymap.set('n', '<leader>ba', function()
         harpoon:list():add()
       end, { desc = '[A]dd to Harpoon' })
 
-      vim.keymap.set('n', '<leader>hr', function()
+      vim.keymap.set('n', '<leader>b_', function()
         harpoon:list():remove()
-      end, { desc = '[R]emove from Harpoon' })
+      end, { desc = 'Remove from Harpoon' })
 
-      vim.keymap.set('n', '<leader><lt>', function()
+      vim.keymap.set('n', '<leader><leader>', function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end, { desc = 'Toggle Harpoon' })
+
+      vim.keymap.set('n', '<leader>br', function()
+        harpoon:list():select(1)
+      end, { desc = 'Harpoon 1' })
+
+      vim.keymap.set('n', '<leader>be', function()
+        harpoon:list():select(2)
+      end, { desc = 'Harpoon 2' })
+
+      vim.keymap.set('n', '<leader>b<Space>', function()
+        harpoon:list():select(3)
+      end, { desc = 'Harpoon 3' })
 
       local conf = require('telescope.config').values
       local function toggle_telescope(harpoon_files)
@@ -119,9 +140,38 @@ return {
     end,
   },
   {
+    'willothy/nvim-cokeline',
+    dependencies = {
+      'nvim-lua/plenary.nvim', -- Required for v0.4.0+
+      'nvim-tree/nvim-web-devicons', -- If you want devicons
+    },
+    config = function()
+      require('cokeline').setup {
+        show_if_buffers_are_at_least = 2,
+      }
+
+      local mappings = require 'cokeline.mappings'
+
+      require('which-key').add {
+        { '<leader>b', group = '[B]uffers' },
+      }
+      vim.keymap.set('n', '<leader>b;', function()
+        mappings.by_step('focus', 1)
+      end, { desc = 'Next Buffer' })
+
+      vim.keymap.set('n', '<leader>b,', function()
+        mappings.by_step('focus', -1)
+      end, { desc = 'Prev Buffer' })
+    end,
+  },
+  {
     'nvimdev/lspsaga.nvim',
     config = function()
-      require('lspsaga').setup {}
+      require('lspsaga').setup {
+        lightbulb = {
+          virtual_text = false,
+        },
+      }
 
       vim.keymap.set('n', '<leader>ld', '<cmd>Lspsaga hover_doc<CR>', { desc = '[D]isplay docs' })
       vim.keymap.set({ 'n', 'i' }, '<C-g>', '<cmd>Lspsaga hover_doc<CR>')
