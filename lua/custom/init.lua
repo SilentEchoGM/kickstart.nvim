@@ -1,5 +1,6 @@
 local root_names = { '.git', '.jj' }
 
+vim.cmd 'language en_us'
 -- Cache to use for speed up (at cost of possibly outdated results)
 local root_cache = {}
 
