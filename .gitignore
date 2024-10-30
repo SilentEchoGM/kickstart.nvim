@@ -5,3 +5,8 @@ nvim
 
 spell/
 lazy-lock.json
+
+*.exe
+*.dll
+*.msi
+dist/
