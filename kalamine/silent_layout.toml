@@ -1,7 +1,7 @@
 # kalamine keyboard layout descriptor
 name        = "us-silent"  # full layout name, displayed in the keyboard settings
 name8       = "ussilent"         # short Windows filename: no spaces, no special chars
-locale      = "en-US"             # locale/language id
+locale      = "en-GB"             # locale/language id
 variant     = "custom"         # layout variant id
 author      = "silent"         # author name
 description = "Tweaked US for CC1/M4G"
