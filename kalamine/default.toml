@@ -1,27 +1,27 @@
 # kalamine keyboard layout descriptor
-name        = "us-silent"  # full layout name, displayed in the keyboard settings
-name8       = "ussilent"         # short Windows filename: no spaces, no special chars
-locale      = "en-US"             # locale/language id
+name        = "qwerty-custom"  # full layout name, displayed in the keyboard settings
+name8       = "custom"         # short Windows filename: no spaces, no special chars
+locale      = "us"             # locale/language id
 variant     = "custom"         # layout variant id
-author      = "silent"         # author name
-description = "Tweaked US for CC1/M4G"
-url         = ""
+author      = "nobody"         # author name
+description = "custom QWERTY layout"
+url         = "https://OneDeadKey.github.com/kalamine"
 version     = "0.0.1"
 geometry    = "ISO"
 
 base = '''
 ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┲━━━━━━━━━━┓
 │ ~   │ !   │ @   │ #   │ $   │ %   │ ^   │ &   │ *   │ (   │ )   │ _   │ +   ┃          ┃
-│ `   │ 1   │ 2   │ 3   │ 4 £ │ 5   │ 6   │ 7   │ 8   │ 9   │ 0   │ -   │ =   ┃ ⌫        ┃
+│ `   │ 1   │ 2   │ 3   │ 4   │ 5   │ 6   │ 7   │ 8   │ 9   │ 0   │ -   │ =   ┃ ⌫        ┃
 ┢━━━━━┷━━┱──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┺━━┳━━━━━━━┫
 ┃        ┃ Q   │ W   │ E   │ R   │ T   │ Y   │ U   │ I   │ O   │ P   │ {   │ }   ┃       ┃
-┃ ↹      ┃     │     │   é │     │     │     │     │     │     │     │ [   │ ]   ┃       ┃
+┃ ↹      ┃     │     │     │     │     │     │     │     │     │     │ [   │ ]   ┃       ┃
 ┣━━━━━━━━┻┱────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┴┬────┺┓  ⏎   ┃
 ┃         ┃ A   │ S   │ D   │ F   │ G   │ H   │ J   │ K   │ L   │ :   │ "   │ |   ┃      ┃
-┃ ⇬       ┃     │     │     │     │     │     │     │     │     │ ;*¨ │ '   │ ?   ┃      ┃
+┃ ⇬       ┃     │     │     │     │     │     │     │     │     │ ;   │ '   │ \   ┃      ┃
 ┣━━━━━━┳━━┹──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┬──┴──┲━━┷━━━━━┻━━━━━━┫
-┃      ┃ |   │ Z   │ X   │ C   │ V   │ B   │ N   │ M   │ <   │ >   │ \   ┃               ┃
-┃ ⇧    ┃ :   │     │     │   ₵ │     │     │     │     │ ,   │ .   │ /   ┃ ⇧             ┃
+┃      ┃ |   │ Z   │ X   │ C   │ V   │ B   │ N   │ M   │ <   │ >   │ ?   ┃               ┃
+┃ ⇧    ┃ \   │     │     │     │     │     │     │     │ ,   │ .   │ /   ┃ ⇧             ┃
 ┣━━━━━━┻┳━━━━┷━━┳━━┷━━━━┱┴─────┴─────┴─────┴─────┴─────┴─┲━━━┷━━━┳━┷━━━━━╋━━━━━━━┳━━━━━━━┫
 ┃       ┃       ┃       ┃                                ┃       ┃       ┃       ┃       ┃
 ┃ Ctrl  ┃ super ┃ Alt   ┃ ␣                              ┃ AltGr ┃ super ┃ menu  ┃ Ctrl  ┃
