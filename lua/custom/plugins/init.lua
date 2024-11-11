@@ -4,6 +4,12 @@
 -- See the kickstart.nvim README for more information
 return {
   {
+    'andymass/vim-matchup',
+    setup = function()
+      vim.g.matchup_matchparen_offscreen = { method = 'popup' }
+    end,
+  },
+  {
     'julienvincent/hunk.nvim',
     cmd = { 'DiffEditor' },
     config = function()
@@ -164,25 +170,25 @@ return {
       end, { desc = 'Prev Buffer' })
     end,
   },
-  {
-    'nvimdev/lspsaga.nvim',
-    config = function()
-      require('lspsaga').setup {
-        lightbulb = {
-          virtual_text = false,
-        },
-      }
-
-      vim.keymap.set('n', '<leader>ld', '<cmd>Lspsaga hover_doc<CR>', { desc = '[D]isplay docs' })
-      vim.keymap.set({ 'n', 'i' }, '<C-g>', '<cmd>Lspsaga hover_doc<CR>')
-      vim.keymap.set('n', '<leader>lp', '<cmd>Lspsaga hover_doc ++keep<CR>', { desc = '[P]in docs' })
-      vim.keymap.set({ 'n', 'i' }, '<C-m>', '<cmd>Lspsaga hover_doc ++keep<CR>')
-    end,
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'nvim-tree/nvim-web-devicons',
-    },
-  },
+  -- {
+  --   'nvimdev/lspsaga.nvim',
+  --   config = function()
+  --     require('lspsaga').setup {
+  --       lightbulb = {
+  --         virtual_text = false,
+  --       },
+  --     }
+  --
+  --     vim.keymap.set('n', '<leader>ld', '<cmd>Lspsaga hover_doc<CR>', { desc = '[D]isplay docs' })
+  --     vim.keymap.set({ 'n', 'i' }, '<C-g>', '<cmd>Lspsaga hover_doc<CR>')
+  --     vim.keymap.set('n', '<leader>lp', '<cmd>Lspsaga hover_doc ++keep<CR>', { desc = '[P]in docs' })
+  --     vim.keymap.set({ 'n', 'i' }, '<C-m>', '<cmd>Lspsaga hover_doc ++keep<CR>')
+  --   end,
+  --   dependencies = {
+  --     'nvim-treesitter/nvim-treesitter',
+  --     'nvim-tree/nvim-web-devicons',
+  --   },
+  -- },
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
@@ -229,6 +235,16 @@ return {
         columns = { 'icon', 'mtime' },
         delete_to_trash = true,
       }
+    end,
+  },
+  {
+    'NvChad/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+
+      vim.keymap.set('n', '<leader>lc', function()
+        require('colorizer').attach_to_buffer(0, { mode = 'background', css = true })
+      end)
     end,
   },
 }

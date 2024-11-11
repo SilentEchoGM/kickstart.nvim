@@ -99,12 +99,9 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 -- Set Terminal
-vim.opt.shell = 'pwsh.exe'
+vim.opt.shell = 'zsh'
 vim.opt.shellxquote = ''
-vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
 vim.opt.shellquote = ''
-vim.opt.shellpipe = '| Out-File -Encoding UTF8 %s'
-vim.opt.shellredir = '| Out-File -Encoding UTF8 %s'
 
 -- Make line numbers default
 vim.opt.number = true
@@ -427,6 +424,10 @@ require('lazy').setup({
             hidden = true,
           },
         },
+        defaults = {
+          path_display = { 'truncate' },
+          file_ignore_patterns = { 'node_modules' },
+        },
       }
 
       -- Enable Telescope extensions if they are installed
@@ -498,7 +499,7 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'nvimdev/lspsaga.nvim',
+      -- 'nvimdev/lspsaga.nvim',
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
@@ -807,8 +808,7 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-
+        completion = { completeopt = 'menu,menuone,noinsert,noselect' },
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
         --
