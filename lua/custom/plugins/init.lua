@@ -170,25 +170,6 @@ return {
       end, { desc = 'Prev Buffer' })
     end,
   },
-  -- {
-  --   'nvimdev/lspsaga.nvim',
-  --   config = function()
-  --     require('lspsaga').setup {
-  --       lightbulb = {
-  --         virtual_text = false,
-  --       },
-  --     }
-  --
-  --     vim.keymap.set('n', '<leader>ld', '<cmd>Lspsaga hover_doc<CR>', { desc = '[D]isplay docs' })
-  --     vim.keymap.set({ 'n', 'i' }, '<C-g>', '<cmd>Lspsaga hover_doc<CR>')
-  --     vim.keymap.set('n', '<leader>lp', '<cmd>Lspsaga hover_doc ++keep<CR>', { desc = '[P]in docs' })
-  --     vim.keymap.set({ 'n', 'i' }, '<C-m>', '<cmd>Lspsaga hover_doc ++keep<CR>')
-  --   end,
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter',
-  --     'nvim-tree/nvim-web-devicons',
-  --   },
-  -- },
   {
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },

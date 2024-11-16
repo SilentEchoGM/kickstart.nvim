@@ -84,11 +84,12 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+vim.keymap.set({ 'n', 'i' }, ']', '<Nop>')
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = '>'
-vim.g.maplocalleader = '>'
+vim.g.mapleader = ']'
+vim.g.maplocalleader = ']'
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
@@ -499,7 +500,6 @@ require('lazy').setup({
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      -- 'nvimdev/lspsaga.nvim',
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', opts = {} },
@@ -808,6 +808,7 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
+        preselect = 'None',
         completion = { completeopt = 'menu,menuone,noinsert,noselect' },
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
